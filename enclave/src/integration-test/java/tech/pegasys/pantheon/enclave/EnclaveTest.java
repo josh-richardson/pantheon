@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertTrue;
 
+import org.awaitility.Awaitility;
 import tech.pegasys.orion.testutil.OrionTestHarness;
 import tech.pegasys.orion.testutil.OrionTestHarnessFactory;
 import tech.pegasys.pantheon.enclave.types.CreatePrivacyGroupRequest;
@@ -32,6 +33,7 @@ import tech.pegasys.pantheon.enclave.types.SendResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.google.common.collect.Lists;
 import org.junit.After;
@@ -143,8 +145,15 @@ public class EnclaveTest {
     assertThat(privacyGroupResponse.getDescription()).isEqualTo(description);
     assertThat(privacyGroupResponse.getType()).isEqualTo(PrivacyGroup.Type.PANTHEON);
 
-    FindPrivacyGroupRequest findPrivacyGroupRequest =
-        new FindPrivacyGroupRequest(publicKeys.toArray(new String[0]));
+
+    final FindPrivacyGroupRequest findPrivacyGroupRequest =
+            new FindPrivacyGroupRequest(publicKeys.toArray(new String[0]));
+
+    Awaitility.await()
+            .ignoreExceptions()
+            .atMost(30, TimeUnit.SECONDS)
+            .untilAsserted(() -> enclave.findPrivacyGroup(findPrivacyGroupRequest));
+
     PrivacyGroup[] findPrivacyGroupResponse = enclave.findPrivacyGroup(findPrivacyGroupRequest);
 
     assertThat(findPrivacyGroupResponse.length).isEqualTo(1);
@@ -158,8 +167,8 @@ public class EnclaveTest {
 
     assertThat(privacyGroupResponse.getPrivacyGroupId()).isEqualTo(response);
 
-    findPrivacyGroupRequest = new FindPrivacyGroupRequest(publicKeys.toArray(new String[0]));
-    findPrivacyGroupResponse = enclave.findPrivacyGroup(findPrivacyGroupRequest);
+    FindPrivacyGroupRequest secondFindPrivacyGroupRequest = new FindPrivacyGroupRequest(publicKeys.toArray(new String[0]));
+    findPrivacyGroupResponse = enclave.findPrivacyGroup(secondFindPrivacyGroupRequest);
 
     assertThat(findPrivacyGroupResponse.length).isEqualTo(0);
   }
