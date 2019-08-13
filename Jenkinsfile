@@ -161,23 +161,6 @@ try {
                     }
                 }
             }
-        }, DocTests: {
-            def stage_name = "Documentation tests node: "
-            node {
-                checkout scm
-                stage(stage_name + 'Build') {
-//                Python image version should be set to the same as in readthedocs.yml
-//                to make sure we test with the same version that RTD will use
-                    def container = docker.image("python:3.7-alpine").inside() {
-                        try {
-                            sh 'pip install -r docs/requirements.txt'
-                            sh 'mkdocs build -s'
-                        } catch (e) {
-                            throw e
-                        }
-                    }
-                }
-            }
         }, DockerImage: {
                 def stage_name = 'Docker image node: '
                 def image = imageRepos + '/pantheon:' + imageTag
@@ -228,6 +211,34 @@ try {
                         }
                     }
                 }
+        }
+
+        if (env.BRANCH_NAME == "master") {
+            BintrayPublish: {
+                def stage_name = "Bintray publish node: "
+                node {
+                    checkout scm
+
+                    docker.image(docker_image_dind).withRun('--privileged') { d ->
+                        docker.image(build_image).inside("--link ${d.id}:docker") {
+                            stage(stage_name + 'Prepare') {
+                                sh './gradlew --no-daemon --parallel clean assemble'
+                            }
+                            stage(stage_name + 'Publish') {
+                                withCredentials([
+                                usernamePassword(
+                                    credentialsId: 'pegasys-bintray',
+                                    usernameVariable: 'BINTRAY_USER',
+                                    passwordVariable: 'BINTRAY_KEY'
+                                )
+                                ]) {
+                                    sh './gradlew --no-daemon --parallel bintrayUpload'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 } catch (e) {

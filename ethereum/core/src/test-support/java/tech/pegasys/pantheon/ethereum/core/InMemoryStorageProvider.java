@@ -13,7 +13,7 @@
 package tech.pegasys.pantheon.ethereum.core;
 
 import tech.pegasys.pantheon.ethereum.chain.BlockchainStorage;
-import tech.pegasys.pantheon.ethereum.chain.DefaultMutableBlockchain;
+import tech.pegasys.pantheon.ethereum.chain.DefaultBlockchain;
 import tech.pegasys.pantheon.ethereum.chain.MutableBlockchain;
 import tech.pegasys.pantheon.ethereum.mainnet.MainnetBlockHeaderFunctions;
 import tech.pegasys.pantheon.ethereum.mainnet.ProtocolSchedule;
@@ -32,6 +32,7 @@ import tech.pegasys.pantheon.ethereum.worldstate.WorldStatePreimageStorage;
 import tech.pegasys.pantheon.ethereum.worldstate.WorldStateStorage;
 import tech.pegasys.pantheon.metrics.noop.NoOpMetricsSystem;
 import tech.pegasys.pantheon.services.kvstore.InMemoryKeyValueStorage;
+import tech.pegasys.pantheon.services.kvstore.KeyValueStorage;
 
 public class InMemoryStorageProvider implements StorageProvider {
 
@@ -42,7 +43,7 @@ public class InMemoryStorageProvider implements StorageProvider {
   public static MutableBlockchain createInMemoryBlockchain(
       final Block genesisBlock, final BlockHeaderFunctions blockHeaderFunctions) {
     final InMemoryKeyValueStorage keyValueStorage = new InMemoryKeyValueStorage();
-    return new DefaultMutableBlockchain(
+    return DefaultBlockchain.createMutable(
         genesisBlock,
         new KeyValueStoragePrefixedKeyBlockchainStorage(keyValueStorage, blockHeaderFunctions),
         new NoOpMetricsSystem());
@@ -84,6 +85,11 @@ public class InMemoryStorageProvider implements StorageProvider {
   @Override
   public PrivateStateStorage createPrivateStateStorage() {
     return new PrivateStateKeyValueStorage(new InMemoryKeyValueStorage());
+  }
+
+  @Override
+  public KeyValueStorage createPruningStorage() {
+    return new InMemoryKeyValueStorage();
   }
 
   @Override
