@@ -153,6 +153,9 @@ public class PrivacyPrecompiledContract extends AbstractPrecompiledContract {
 
       final Bytes32 txHash = keccak256(RLP.encode(privateTransaction::writeTo));
       final PrivateTransactionStorage.Updater privateUpdater = privateTransactionStorage.updater();
+
+//    TODO: push private transaction to orion so we can add members to privacy groups without doing crazy stuff here.
+
       final LogSeries logs = result.getLogs();
       if (!logs.isEmpty()) {
         privateUpdater.putTransactionLogs(txHash, result.getLogs());

@@ -114,6 +114,7 @@ public enum JsonRpcError {
   FIND_PRIVACY_GROUP_ERROR(-50100, "Error finding privacy group"),
   VALUE_NOT_ZERO(-50100, "We cannot transfer ether in private transaction yet."),
   DECODE_ERROR(-50100, "Unable to decode the private signed raw transaction"),
+  CANNOT_GET_STATE_ROOT(-50100, "Cannot get the state root for the specified privacy group"),
 
   CANT_CONNECT_TO_LOCAL_PEER(-32100, "Cannot add local node as peer."),
 
