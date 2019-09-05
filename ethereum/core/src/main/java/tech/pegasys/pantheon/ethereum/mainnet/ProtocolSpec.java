@@ -18,7 +18,10 @@ import tech.pegasys.pantheon.ethereum.core.BlockImporter;
 import tech.pegasys.pantheon.ethereum.core.TransactionFilter;
 import tech.pegasys.pantheon.ethereum.core.Wei;
 import tech.pegasys.pantheon.ethereum.mainnet.MainnetBlockProcessor.TransactionReceiptFactory;
+import tech.pegasys.pantheon.ethereum.privacy.PrivateTransactionProcessor;
 import tech.pegasys.pantheon.ethereum.vm.EVM;
+
+import java.util.Optional;
 
 /** A protocol specification. */
 public class ProtocolSpec<C> {
@@ -30,6 +33,7 @@ public class ProtocolSpec<C> {
 
   private final TransactionProcessor transactionProcessor;
 
+  private Optional<PrivateTransactionProcessor> privateTransactionProcessor;
   private final BlockHeaderValidator<C> blockHeaderValidator;
 
   private final BlockHeaderValidator<C> ommerHeaderValidator;
@@ -82,6 +86,7 @@ public class ProtocolSpec<C> {
       final EVM evm,
       final TransactionValidator transactionValidator,
       final TransactionProcessor transactionProcessor,
+      final Optional<PrivateTransactionProcessor> privateTransactionProcessor,
       final BlockHeaderValidator<C> blockHeaderValidator,
       final BlockHeaderValidator<C> ommerHeaderValidator,
       final BlockBodyValidator<C> blockBodyValidator,
@@ -99,6 +104,7 @@ public class ProtocolSpec<C> {
     this.evm = evm;
     this.transactionValidator = transactionValidator;
     this.transactionProcessor = transactionProcessor;
+    this.privateTransactionProcessor = privateTransactionProcessor;
     this.blockHeaderValidator = blockHeaderValidator;
     this.ommerHeaderValidator = ommerHeaderValidator;
     this.blockBodyValidator = blockBodyValidator;
@@ -261,5 +267,9 @@ public class ProtocolSpec<C> {
 
   public void setTransactionFilter(final TransactionFilter transactionFilter) {
     transactionValidator.setTransactionFilter(transactionFilter);
+  }
+
+  public Optional<PrivateTransactionProcessor> getPrivateTransactionProcessor() {
+    return privateTransactionProcessor;
   }
 }

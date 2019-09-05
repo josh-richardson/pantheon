@@ -13,6 +13,7 @@
 package tech.pegasys.pantheon.ethereum.mainnet;
 
 import tech.pegasys.pantheon.ethereum.core.TransactionFilter;
+import tech.pegasys.pantheon.ethereum.privacy.PrivateTransactionProcessor;
 
 import java.math.BigInteger;
 import java.util.Optional;
@@ -24,4 +25,8 @@ public interface ProtocolSchedule<C> {
   Optional<BigInteger> getChainId();
 
   void setTransactionFilter(TransactionFilter transactionFilter);
+
+  Optional<PrivateTransactionProcessor> getPrivateTransactionProcessor();
+
+  MainnetTransactionProcessor getMainnetTransactionProcessor();
 }

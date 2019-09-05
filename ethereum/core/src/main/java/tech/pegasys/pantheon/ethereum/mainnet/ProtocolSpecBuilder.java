@@ -28,6 +28,7 @@ import tech.pegasys.pantheon.ethereum.privacy.PrivateTransactionValidator;
 import tech.pegasys.pantheon.ethereum.vm.EVM;
 import tech.pegasys.pantheon.ethereum.vm.GasCalculator;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -281,6 +282,7 @@ public class ProtocolSpecBuilder<T> {
             gasCalculator, transactionValidator, contractCreationProcessor, messageCallProcessor);
 
     // Set private Tx Processor
+    Optional<PrivateTransactionProcessor> optionalPrivateTransactionProcessor = Optional.empty();
     if (privacyParameters.isEnabled()) {
       final PrivateTransactionValidator privateTransactionValidator =
           privateTransactionValidatorBuilder.apply();
@@ -291,6 +293,7 @@ public class ProtocolSpecBuilder<T> {
               contractCreationProcessor,
               messageCallProcessor,
               privateTransactionValidator);
+      optionalPrivateTransactionProcessor = Optional.of(privateTransactionProcessor);
       Address address = Address.privacyPrecompiled(privacyParameters.getPrivacyAddress());
       PrivacyPrecompiledContract privacyPrecompiledContract =
           (PrivacyPrecompiledContract)
@@ -319,6 +322,7 @@ public class ProtocolSpecBuilder<T> {
         evm,
         transactionValidator,
         transactionProcessor,
+        optionalPrivateTransactionProcessor,
         blockHeaderValidator,
         ommerHeaderValidator,
         blockBodyValidator,

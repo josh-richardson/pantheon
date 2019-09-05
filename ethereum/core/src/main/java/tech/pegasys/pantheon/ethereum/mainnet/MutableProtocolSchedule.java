@@ -15,6 +15,7 @@ package tech.pegasys.pantheon.ethereum.mainnet;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import tech.pegasys.pantheon.ethereum.core.TransactionFilter;
+import tech.pegasys.pantheon.ethereum.privacy.PrivateTransactionProcessor;
 
 import java.math.BigInteger;
 import java.util.Comparator;
@@ -75,5 +76,15 @@ public class MutableProtocolSchedule<C> implements ProtocolSchedule<C> {
   @Override
   public void setTransactionFilter(final TransactionFilter transactionFilter) {
     protocolSpecs.forEach(spec -> spec.getSpec().setTransactionFilter(transactionFilter));
+  }
+
+  @Override
+  public Optional<PrivateTransactionProcessor> getPrivateTransactionProcessor() {
+    return protocolSpecs.last().getSpec().getPrivateTransactionProcessor();
+  }
+
+  @Override
+  public MainnetTransactionProcessor getMainnetTransactionProcessor() {
+    return (MainnetTransactionProcessor) protocolSpecs.last().getSpec().getTransactionProcessor();
   }
 }

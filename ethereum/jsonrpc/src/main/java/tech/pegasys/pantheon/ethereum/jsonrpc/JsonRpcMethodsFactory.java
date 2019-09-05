@@ -105,6 +105,7 @@ import tech.pegasys.pantheon.ethereum.jsonrpc.internal.privacy.methods.priv.Priv
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.privacy.methods.priv.PrivGetPrivacyPrecompileAddress;
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.privacy.methods.priv.PrivGetPrivateTransaction;
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.privacy.methods.priv.PrivGetTransactionCount;
+import tech.pegasys.pantheon.ethereum.jsonrpc.internal.privacy.methods.priv.PrivSetPrivacyGroupState;
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.processor.BlockReplay;
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.processor.BlockTracer;
 import tech.pegasys.pantheon.ethereum.jsonrpc.internal.processor.TransactionTracer;
@@ -363,8 +364,14 @@ public class JsonRpcMethodsFactory {
             new PrivFindPrivacyGroup(new Enclave(privacyParameters.getEnclaveUri()), parameter),
             new PrivGetPrivacyPrecompileAddress(privacyParameters),
             new PrivGetTransactionCount(parameter, privateTransactionHandler),
-            new PrivGetPrivateTransaction(
-                blockchainQueries, enclave, parameter, privacyParameters));
+            new PrivGetPrivateTransaction(blockchainQueries, enclave, parameter, privacyParameters),
+            new PrivSetPrivacyGroupState(
+                new Enclave(privacyParameters.getEnclaveUri()),
+                privacyParameters,
+                parameter,
+                blockchainQueries,
+                protocolSchedule.getMainnetTransactionProcessor(),
+                protocolSchedule.getPrivateTransactionProcessor().get()));
       }
     }
 
