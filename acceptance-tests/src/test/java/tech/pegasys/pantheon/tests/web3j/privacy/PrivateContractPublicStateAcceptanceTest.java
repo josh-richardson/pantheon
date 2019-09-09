@@ -14,6 +14,7 @@ package tech.pegasys.pantheon.tests.web3j.privacy;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Assert;
 import tech.pegasys.pantheon.tests.acceptance.dsl.privacy.PrivacyAcceptanceTestBase;
 import tech.pegasys.pantheon.tests.acceptance.dsl.privacy.PrivacyNode;
 import tech.pegasys.pantheon.tests.web3j.generated.CrossContractReader;
@@ -21,7 +22,6 @@ import tech.pegasys.pantheon.tests.web3j.generated.EventEmitter;
 
 import java.math.BigInteger;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -58,7 +58,7 @@ public class PrivateContractPublicStateAcceptanceTest extends PrivacyAcceptanceT
                     minerNode.getTransactionSigningKey(),
                     POW_CHAIN_ID,
                     minerNode.getEnclaveKey()));
-    Assert.assertEquals(
-        reader.read(publicEventEmitter.getContractAddress()).send(), BigInteger.valueOf(12));
+        Assert.assertEquals(
+            reader.read(publicEventEmitter.getContractAddress()).send(), BigInteger.valueOf(12));
   }
 }
