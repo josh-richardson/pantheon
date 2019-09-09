@@ -1,0 +1,1 @@
+[{"constant":true,"inputs":[{"name":"emitter_address","type":"address"}],"name":"read","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]

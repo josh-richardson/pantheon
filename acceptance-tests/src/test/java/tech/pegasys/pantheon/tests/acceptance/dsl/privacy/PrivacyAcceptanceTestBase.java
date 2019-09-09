@@ -12,6 +12,7 @@
  */
 package tech.pegasys.pantheon.tests.acceptance.dsl.privacy;
 
+import tech.pegasys.pantheon.tests.acceptance.dsl.AcceptanceTestBase;
 import tech.pegasys.pantheon.tests.acceptance.dsl.condition.net.NetConditions;
 import tech.pegasys.pantheon.tests.acceptance.dsl.node.configuration.privacy.PrivacyNodeFactory;
 import tech.pegasys.pantheon.tests.acceptance.dsl.privacy.account.PrivacyAccountResolver;
@@ -25,7 +26,7 @@ import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.rules.TemporaryFolder;
 
-public class PrivacyAcceptanceTestBase {
+public class PrivacyAcceptanceTestBase extends AcceptanceTestBase {
   @ClassRule public static final TemporaryFolder privacy = new TemporaryFolder();
 
   protected final PrivacyTransactions privacyTransactions;
