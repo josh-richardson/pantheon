@@ -50,7 +50,7 @@ public class DefaultMutablePrivateWorldStateUpdater implements WorldUpdater {
   @Override
   public MutableAccount getMutable(final Address address) {
     final MutableAccount privateAccount = privateWorldUpdater.getMutable(address);
-    if (privateAccount!= null && !privateAccount.isEmpty()) {
+    if (privateAccount != null && !privateAccount.isEmpty()) {
       return privateAccount;
     }
     final MutableAccount publicAccount = publicWorldUpdater.getMutable(address);
