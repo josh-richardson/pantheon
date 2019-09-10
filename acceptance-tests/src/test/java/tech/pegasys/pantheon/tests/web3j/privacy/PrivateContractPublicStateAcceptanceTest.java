@@ -12,8 +12,13 @@
  */
 package tech.pegasys.pantheon.tests.web3j.privacy;
 
-import static org.junit.Assert.assertNotNull;
-
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.eea.response.PrivateTransactionReceipt;
+import org.web3j.tx.exceptions.ContractCallException;
+import tech.pegasys.pantheon.ethereum.jsonrpc.internal.results.privacy.PrivateTransactionReceiptResult;
 import tech.pegasys.pantheon.tests.acceptance.dsl.privacy.PrivacyAcceptanceTestBase;
 import tech.pegasys.pantheon.tests.acceptance.dsl.privacy.PrivacyNode;
 import tech.pegasys.pantheon.tests.web3j.generated.CrossContractReader;
@@ -21,10 +26,7 @@ import tech.pegasys.pantheon.tests.web3j.generated.EventEmitter;
 
 import java.math.BigInteger;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import static org.junit.Assert.assertNotNull;
 
 public class PrivateContractPublicStateAcceptanceTest extends PrivacyAcceptanceTestBase {
   private static final long POW_CHAIN_ID = 2018;
@@ -60,5 +62,48 @@ public class PrivateContractPublicStateAcceptanceTest extends PrivacyAcceptanceT
                     minerNode.getEnclaveKey()));
     Assert.assertEquals(
         reader.read(publicEventEmitter.getContractAddress()).send(), BigInteger.valueOf(12));
+  }
+
+  @Test(expected = ContractCallException.class)
+  public void mustNotAllowAccessToPrivateStateFromPublicTx() throws Exception {
+    final EventEmitter privateEventEmitter =
+        minerNode
+            .getPantheon()
+            .execute(
+                (privateContractTransactions.createSmartContract(
+                    EventEmitter.class,
+                    minerNode.getTransactionSigningKey(),
+                    POW_CHAIN_ID,
+                    minerNode.getEnclaveKey())));
+
+    final TransactionReceipt receipt = privateEventEmitter.store(BigInteger.valueOf(12)).send();
+    assertNotNull(receipt);
+
+    CrossContractReader publicReader =
+        minerNode
+            .getPantheon()
+            .execute(contractTransactions.createSmartContract(CrossContractReader.class));
+
+    publicReader.read(privateEventEmitter.getContractAddress()).send();
+  }
+
+  @Test
+  public void privateContractMustNotBeAbleToCallPublicContractWhichInstantiatesContract() throws Exception {
+    CrossContractReader privateReader =
+        minerNode
+            .getPantheon()
+            .execute(
+                privateContractTransactions.createSmartContract(
+                    CrossContractReader.class,
+                    minerNode.getTransactionSigningKey(),
+                    POW_CHAIN_ID,
+                    minerNode.getEnclaveKey()));
+
+    CrossContractReader publicReader = minerNode.getPantheon().execute(contractTransactions.createSmartContract(CrossContractReader.class));
+
+    var transactionReceipt = (PrivateTransactionReceipt) privateReader.deployRemote(publicReader.getContractAddress()).send();
+
+
+    //todo: result here is null which implies tx did not go through, but no error is encountered.
   }
 }

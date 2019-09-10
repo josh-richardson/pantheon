@@ -55,7 +55,8 @@ public class DefaultMutablePrivateWorldStateUpdater implements WorldUpdater {
     }
     final MutableAccount publicAccount = publicWorldUpdater.getMutable(address);
     if (publicAccount != null && !publicAccount.isEmpty()) {
-      return new ReadOnlyMutableAccount(publicAccount);
+      revert();
+      return new ReadOnlyMutableAccount(publicAccount, publicWorldUpdater, privateWorldUpdater);
     }
     return null;
   }
