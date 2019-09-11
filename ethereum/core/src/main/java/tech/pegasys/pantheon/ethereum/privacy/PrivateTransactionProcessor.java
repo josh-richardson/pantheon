@@ -212,7 +212,7 @@ public class PrivateTransactionProcessor {
     final MessageFrame initialFrame;
     final Deque<MessageFrame> messageFrameStack = new ArrayDeque<>();
 
-    final WorldUpdater mungedUpUpdater =
+    final WorldUpdater mutablePrivateWorldStateUpdater =
         new DefaultMutablePrivateWorldStateUpdater(publicWorldState, privateWorldState.updater());
 
     if (transaction.isContractCreation()) {
@@ -231,7 +231,7 @@ public class PrivateTransactionProcessor {
               .type(MessageFrame.Type.CONTRACT_CREATION)
               .messageFrameStack(messageFrameStack)
               .blockchain(blockchain)
-              .worldState(mungedUpUpdater)
+              .worldState(mutablePrivateWorldStateUpdater)
               .address(privateContractAddress)
               .originator(senderAddress)
               .contract(privateContractAddress)
@@ -260,7 +260,7 @@ public class PrivateTransactionProcessor {
               .type(MessageFrame.Type.MESSAGE_CALL)
               .messageFrameStack(messageFrameStack)
               .blockchain(blockchain)
-              .worldState(mungedUpUpdater)
+              .worldState(mutablePrivateWorldStateUpdater)
               .address(to)
               .originator(senderAddress)
               .contract(to)

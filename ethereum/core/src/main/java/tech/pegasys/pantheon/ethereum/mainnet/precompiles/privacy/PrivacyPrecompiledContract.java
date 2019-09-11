@@ -120,7 +120,6 @@ public class PrivacyPrecompiledContract extends AbstractPrecompiledContract {
         privateWorldStateArchive.getMutable(lastRootHash).get();
 
     final WorldUpdater privateWorldStateUpdater = disposablePrivateState.updater();
-
     final PrivateTransactionProcessor.Result result =
         privateTransactionProcessor.processTransaction(
             messageFrame.getBlockchain(),
