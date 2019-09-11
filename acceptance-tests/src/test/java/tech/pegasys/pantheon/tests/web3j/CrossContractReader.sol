@@ -19,6 +19,7 @@ import "./EventEmitter.sol";
 // then create web3j wrappers with:
 // web3j solidity generate -b ./generated/CrossContractReader.bin -a ./generated/CrossContractReader.abi -o ../../../../../ -p tech.pegasys.pantheon.tests.web3j.generated
 contract CrossContractReader {
+    uint counter;
 
     event NewEventEmitter(
         address contractAddress
@@ -37,5 +38,23 @@ contract CrossContractReader {
     function deployRemote(address crossAddress) public {
         CrossContractReader cross = CrossContractReader(crossAddress);
         cross.deploy();
+    }
+
+    function increment() public {
+        counter++;
+    }
+
+    function incrementRemote(address crossAddress) public {
+        CrossContractReader cross = CrossContractReader(crossAddress);
+        cross.increment();
+    }
+
+    function destroy() public {
+        selfdestruct(msg.sender);
+    }
+
+    function remoteDestroy(address crossAddress) public {
+        CrossContractReader cross = CrossContractReader(crossAddress);
+        cross.destroy();
     }
 }

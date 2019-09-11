@@ -16,6 +16,7 @@ import tech.pegasys.pantheon.ethereum.core.Account;
 import tech.pegasys.pantheon.ethereum.core.Address;
 import tech.pegasys.pantheon.ethereum.core.Gas;
 import tech.pegasys.pantheon.ethereum.core.MutableAccount;
+import tech.pegasys.pantheon.ethereum.core.ReadOnlyMutableAccount;
 import tech.pegasys.pantheon.ethereum.vm.EVM;
 import tech.pegasys.pantheon.ethereum.vm.GasCalculator;
 import tech.pegasys.pantheon.ethereum.vm.MessageFrame;
@@ -113,6 +114,9 @@ public class MainnetContractCreationProcessor extends AbstractMessageProcessor {
           "Contract creation error: account as already been created for address {}",
           frame.getContractAddress());
       frame.setState(MessageFrame.State.EXCEPTIONAL_HALT);
+    } else if (contract instanceof ReadOnlyMutableAccount) {
+      LOG.trace("Public contracts cannot be created from private calls");
+      frame.setState(MessageFrame.State.EXCEPTIONAL_HALT);
     } else {
       contract.incrementBalance(frame.getValue());
       contract.setNonce(initialContractNonce);
@@ -147,14 +151,18 @@ public class MainnetContractCreationProcessor extends AbstractMessageProcessor {
         // Finalize contract creation, setting the contract code.
         final MutableAccount contract =
             frame.getWorldState().getOrCreate(frame.getContractAddress());
-        contract.setCode(contractCode);
-        contract.setVersion(accountVersion);
-        LOG.trace(
-            "Successful creation of contract {} with code of size {} (Gas remaining: {})",
-            frame.getContractAddress(),
-            contractCode.size(),
-            frame.getRemainingGas());
-        frame.setState(MessageFrame.State.COMPLETED_SUCCESS);
+        if (!(contract instanceof ReadOnlyMutableAccount)) {
+          contract.setCode(contractCode);
+          contract.setVersion(accountVersion);
+          LOG.trace(
+              "Successful creation of contract {} with code of size {} (Gas remaining: {})",
+              frame.getContractAddress(),
+              contractCode.size(),
+              frame.getRemainingGas());
+          frame.setState(MessageFrame.State.COMPLETED_SUCCESS);
+        } else {
+          frame.setState(MessageFrame.State.EXCEPTIONAL_HALT);
+        }
       } else {
         frame.setState(MessageFrame.State.EXCEPTIONAL_HALT);
       }

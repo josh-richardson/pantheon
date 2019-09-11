@@ -12,7 +12,6 @@
  */
 package tech.pegasys.pantheon.ethereum.core;
 
-import tech.pegasys.pantheon.ethereum.worldstate.DefaultMutablePrivateWorldStateUpdater;
 import tech.pegasys.pantheon.util.bytes.Bytes32;
 import tech.pegasys.pantheon.util.bytes.BytesValue;
 import tech.pegasys.pantheon.util.uint.UInt256;
@@ -22,93 +21,95 @@ import java.util.NavigableMap;
 
 public class ReadOnlyMutableAccount implements MutableAccount {
 
-    private MutableAccount mutableAccount;
-    private final WorldUpdater publicWorldUpdater;
-    private final WorldUpdater privateWorldUpdater;
+  private MutableAccount mutableAccount;
 
-    public ReadOnlyMutableAccount(MutableAccount publicAccount, WorldUpdater publicWorldUpdater, WorldUpdater privateWorldUpdater) {
-        this.mutableAccount = publicAccount;
-        this.publicWorldUpdater = publicWorldUpdater;
-        this.privateWorldUpdater = privateWorldUpdater;
-    }
+  public ReadOnlyMutableAccount(final MutableAccount publicAccount) {
+    this.mutableAccount = publicAccount;
+  }
 
-    @Override
-    public void setNonce(final long value) {
-    }
+  @Override
+  public void setNonce(final long value) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public void setBalance(final Wei value) {
-    }
+  @Override
+  public void setBalance(final Wei value) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public void setCode(final BytesValue code) {
-    }
+  @Override
+  public void setCode(final BytesValue code) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public void setVersion(final int version) {
-    }
+  @Override
+  public void setVersion(final int version) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public void setStorageValue(final UInt256 key, final UInt256 value) {
-    }
+  @Override
+  public void setStorageValue(final UInt256 key, final UInt256 value) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public void clearStorage() {
-    }
+  @Override
+  public void clearStorage() {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public Map<UInt256, UInt256> getUpdatedStorage() {
-        return mutableAccount.getUpdatedStorage();
-    }
+  @Override
+  public Map<UInt256, UInt256> getUpdatedStorage() {
+    return mutableAccount.getUpdatedStorage();
+  }
 
-    @Override
-    public Address getAddress() {
-        return mutableAccount.getAddress();
-    }
+  @Override
+  public Address getAddress() {
+    return mutableAccount.getAddress();
+  }
 
-    @Override
-    public Hash getAddressHash() {
-        return mutableAccount.getAddressHash();
-    }
+  @Override
+  public Hash getAddressHash() {
+    return mutableAccount.getAddressHash();
+  }
 
-    @Override
-    public long getNonce() {
-        return mutableAccount.getNonce();
-    }
+  @Override
+  public long getNonce() {
+    return mutableAccount.getNonce();
+  }
 
-    @Override
-    public Wei getBalance() {
-        return mutableAccount.getBalance();
-    }
+  @Override
+  public Wei getBalance() {
+    return mutableAccount.getBalance();
+  }
 
-    @Override
-    public BytesValue getCode() {
-        return mutableAccount.getCode();
-    }
+  @Override
+  public BytesValue getCode() {
+    return mutableAccount.getCode();
+  }
 
-    @Override
-    public Hash getCodeHash() {
-        return mutableAccount.getCodeHash();
-    }
+  @Override
+  public Hash getCodeHash() {
+    return mutableAccount.getCodeHash();
+  }
 
-    @Override
-    public int getVersion() {
-        return mutableAccount.getVersion();
-    }
+  @Override
+  public int getVersion() {
+    return mutableAccount.getVersion();
+  }
 
-    @Override
-    public UInt256 getStorageValue(final UInt256 key) {
-        return mutableAccount.getStorageValue(key);
-    }
+  @Override
+  public UInt256 getStorageValue(final UInt256 key) {
+    return mutableAccount.getStorageValue(key);
+  }
 
-    @Override
-    public UInt256 getOriginalStorageValue(final UInt256 key) {
-        return mutableAccount.getOriginalStorageValue(key);
-    }
+  @Override
+  public UInt256 getOriginalStorageValue(final UInt256 key) {
+    return mutableAccount.getOriginalStorageValue(key);
+  }
 
-    @Override
-    public NavigableMap<Bytes32, AccountStorageEntry> storageEntriesFrom(
-            final Bytes32 startKeyHash, final int limit) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public NavigableMap<Bytes32, AccountStorageEntry> storageEntriesFrom(
+      final Bytes32 startKeyHash, final int limit) {
+    throw new UnsupportedOperationException();
+  }
 }
