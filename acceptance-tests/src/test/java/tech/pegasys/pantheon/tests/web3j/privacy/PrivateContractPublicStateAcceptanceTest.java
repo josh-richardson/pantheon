@@ -52,7 +52,7 @@ public class PrivateContractPublicStateAcceptanceTest extends PrivacyAcceptanceT
     final TransactionReceipt receipt = publicEventEmitter.store(BigInteger.valueOf(12)).send();
     assertNotNull(receipt);
 
-    CrossContractReader reader =
+    final CrossContractReader reader =
         minerNode
             .getPantheon()
             .execute(
@@ -80,7 +80,7 @@ public class PrivateContractPublicStateAcceptanceTest extends PrivacyAcceptanceT
     final TransactionReceipt receipt = privateEventEmitter.store(BigInteger.valueOf(12)).send();
     assertNotNull(receipt);
 
-    CrossContractReader publicReader =
+    final CrossContractReader publicReader =
         minerNode
             .getPantheon()
             .execute(contractTransactions.createSmartContract(CrossContractReader.class));
@@ -90,7 +90,7 @@ public class PrivateContractPublicStateAcceptanceTest extends PrivacyAcceptanceT
 
   @Test
   public void privateContractMustNotBeAbleToCallPublicContractWhichChangesState() throws Exception {
-    CrossContractReader privateReader =
+    final CrossContractReader privateReader =
         minerNode
             .getPantheon()
             .execute(
@@ -100,12 +100,12 @@ public class PrivateContractPublicStateAcceptanceTest extends PrivacyAcceptanceT
                     POW_CHAIN_ID,
                     minerNode.getEnclaveKey()));
 
-    CrossContractReader publicReader =
+    final CrossContractReader publicReader =
         minerNode
             .getPantheon()
             .execute(contractTransactions.createSmartContract(CrossContractReader.class));
 
-    var transactionReceipt =
+    final PrivateTransactionReceipt transactionReceipt =
         (PrivateTransactionReceipt)
             privateReader.incrementRemote(publicReader.getContractAddress()).send();
 
@@ -115,7 +115,7 @@ public class PrivateContractPublicStateAcceptanceTest extends PrivacyAcceptanceT
   @Test
   public void privateContractMustNotBeAbleToCallPublicContractWhichInstantiatesContract()
       throws Exception {
-    CrossContractReader privateReader =
+    final CrossContractReader privateReader =
         minerNode
             .getPantheon()
             .execute(
@@ -125,12 +125,12 @@ public class PrivateContractPublicStateAcceptanceTest extends PrivacyAcceptanceT
                     POW_CHAIN_ID,
                     minerNode.getEnclaveKey()));
 
-    CrossContractReader publicReader =
+    final CrossContractReader publicReader =
         minerNode
             .getPantheon()
             .execute(contractTransactions.createSmartContract(CrossContractReader.class));
 
-    var transactionReceipt =
+    final PrivateTransactionReceipt transactionReceipt =
         (PrivateTransactionReceipt)
             privateReader.deployRemote(publicReader.getContractAddress()).send();
 
@@ -140,7 +140,7 @@ public class PrivateContractPublicStateAcceptanceTest extends PrivacyAcceptanceT
   @Test
   public void privateContractMustNotBeAbleToCallPublicContractWhichSelfDestructs()
       throws Exception {
-    CrossContractReader privateReader =
+    final CrossContractReader privateReader =
         minerNode
             .getPantheon()
             .execute(
@@ -150,12 +150,12 @@ public class PrivateContractPublicStateAcceptanceTest extends PrivacyAcceptanceT
                     POW_CHAIN_ID,
                     minerNode.getEnclaveKey()));
 
-    CrossContractReader publicReader =
+    final CrossContractReader publicReader =
         minerNode
             .getPantheon()
             .execute(contractTransactions.createSmartContract(CrossContractReader.class));
 
-    var transactionReceipt =
+    final PrivateTransactionReceipt transactionReceipt =
         (PrivateTransactionReceipt)
             privateReader.remoteDestroy(publicReader.getContractAddress()).send();
 
