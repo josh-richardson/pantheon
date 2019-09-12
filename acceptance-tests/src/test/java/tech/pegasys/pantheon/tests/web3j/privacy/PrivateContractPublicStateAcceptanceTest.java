@@ -138,8 +138,7 @@ public class PrivateContractPublicStateAcceptanceTest extends PrivacyAcceptanceT
   }
 
   @Test
-  public void privateContractMustNotBeAbleToCallPublicContractWhichSelfDestructs()
-      throws Exception {
+  public void privateContractMustNotBeAbleToCallSelfDetructOfPublicContract() throws Exception {
     final CrossContractReader privateReader =
         minerNode
             .getPantheon()
