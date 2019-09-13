@@ -114,9 +114,6 @@ public class MainnetContractCreationProcessor extends AbstractMessageProcessor {
           "Contract creation error: account as already been created for address {}",
           frame.getContractAddress());
       frame.setState(MessageFrame.State.EXCEPTIONAL_HALT);
-    } else if (contract instanceof ReadOnlyMutableAccount) {
-      LOG.trace("Public contracts cannot be created from private calls");
-      frame.setState(MessageFrame.State.EXCEPTIONAL_HALT);
     } else {
       contract.incrementBalance(frame.getValue());
       contract.setNonce(initialContractNonce);
