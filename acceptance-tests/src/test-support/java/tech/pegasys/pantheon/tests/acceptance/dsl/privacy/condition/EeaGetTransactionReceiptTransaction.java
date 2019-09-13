@@ -24,27 +24,26 @@ import org.web3j.protocol.exceptions.TransactionException;
 import org.web3j.protocol.pantheon.Pantheon;
 import org.web3j.tx.response.PollingPrivateTransactionReceiptProcessor;
 
-public class PrivGetTransactionReceiptTransaction
-    implements Transaction<PrivateTransactionReceipt> {
+public class EeaGetTransactionReceiptTransaction implements Transaction<PrivateTransactionReceipt> {
 
-  private final String transactionHash;
+    private final String transactionHash;
 
-  public PrivGetTransactionReceiptTransaction(final String transactionHash) {
-    this.transactionHash = transactionHash;
-  }
-
-  @Override
-  public PrivateTransactionReceipt execute(final NodeRequests node) {
-    final Pantheon pantheon = node.privacy().getPantheonClient();
-    final PollingPrivateTransactionReceiptProcessor receiptProcessor =
-        new PollingPrivateTransactionReceiptProcessor(pantheon, 15000, 3);
-    try {
-      final PrivateTransactionReceipt result =
-          receiptProcessor.waitForTransactionReceipt(transactionHash);
-      assertThat(result).isNotNull();
-      return result;
-    } catch (final IOException | TransactionException e) {
-      throw new RuntimeException(e);
+    public EeaGetTransactionReceiptTransaction(final String transactionHash) {
+        this.transactionHash = transactionHash;
     }
-  }
+
+    @Override
+    public PrivateTransactionReceipt execute(final NodeRequests node) {
+        final Pantheon pantheon = node.privacy().getPantheonClient();
+        final PollingPrivateTransactionReceiptProcessor receiptProcessor =
+                new PollingPrivateTransactionReceiptProcessor(pantheon, 15000, 3);
+        try {
+            final PrivateTransactionReceipt result =
+                    receiptProcessor.waitForTransactionReceipt(transactionHash);
+            assertThat(result).isNotNull();
+            return result;
+        } catch (final IOException | TransactionException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
